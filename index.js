@@ -31,9 +31,6 @@ export const logout = () => {
   goToPage(POSTS_PAGE);
 };
 
-/**
- * Включает страницу приложения
- */
 export const goToPage = (newPage, data) => {
   if (
     [
@@ -45,23 +42,26 @@ export const goToPage = (newPage, data) => {
     ].includes(newPage)
   ) {
     if (newPage === ADD_POSTS_PAGE) {
-      // Если пользователь не авторизован, то отправляем его на авторизацию перед добавлением поста
       page = user ? ADD_POSTS_PAGE : AUTH_PAGE;
+
       return renderApp();
     }
 
     if (newPage === POSTS_PAGE) {
       page = LOADING_PAGE;
+
       renderApp();
 
       return getPosts({ token: getToken() })
         .then((newPosts) => {
           page = POSTS_PAGE;
           posts = newPosts;
+
           renderApp();
         })
         .catch((error) => {
           console.error(error);
+
           goToPage(POSTS_PAGE);
         });
     }
@@ -71,12 +71,13 @@ export const goToPage = (newPage, data) => {
       console.log("Открываю страницу пользователя: ", data.userId);
       page = USER_POSTS_PAGE;
       posts = [];
+
       return renderApp();
     }
 
     page = newPage;
-    renderApp();
 
+    renderApp();
     return;
   }
 
