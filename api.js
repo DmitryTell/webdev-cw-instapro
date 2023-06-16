@@ -1,4 +1,4 @@
-const personalKey = "prod";
+const personalKey = "teleganov-dm";
 const baseHost = "https://wedev-api.sky.pro";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 
@@ -19,6 +19,19 @@ export function getPosts({ token }) {
     .then((data) => {
       return data.posts;
     });
+}
+
+export function addNewPost({ token, description, imageUrl }) {
+  return fetch(postsHost, {
+    method: "POST",
+    headers: {
+      Authorization: token
+    },
+    body: JSON.stringify({
+      description,
+      imageUrl
+    })
+  }).then(response => response.json());
 }
 
 export function registerUser({ login, password, name, imageUrl }) {

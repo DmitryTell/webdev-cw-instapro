@@ -1,4 +1,4 @@
-import { getPosts } from "./api.js";
+import { addNewPost, getPosts } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -22,11 +22,13 @@ export let posts = [];
 
 const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
+
   return token;
 };
 
 export const logout = () => {
   user = null;
+
   removeUserFromLocalStorage();
   goToPage(POSTS_PAGE);
 };
@@ -111,9 +113,13 @@ const renderApp = () => {
     return renderAddPostPageComponent({
       appEl,
       onAddPostClick({ description, imageUrl }) {
-        // TODO: реализовать добавление поста в API
-        console.log("Добавляю пост...", { description, imageUrl });
-        goToPage(POSTS_PAGE);
+        addNewPost({
+          token: getToken(),
+          description,
+          imageUrl
+        }).then(() => {
+          return goToPage(POSTS_PAGE);
+        });
       },
     });
   }
