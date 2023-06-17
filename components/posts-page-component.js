@@ -1,7 +1,7 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage, getToken, renderApp } from "../index.js";
-import { dislikePost, likePost } from "../api.js";
+import { posts, page, currentLogin, goToPage, getToken, renderApp } from "../index.js";
+import { deletePost, dislikePost, likePost } from "../api.js";
 
 export function renderPostsPageComponent({ appEl }) {
   /**
@@ -14,6 +14,10 @@ export function renderPostsPageComponent({ appEl }) {
         <div class="post-header" data-user-id="${post.user.id}">
           <img src="${post.user.imageUrl}" class="post-header__user-image">
           <p class="post-header__user-name">${post.user.name}</p>
+          ${
+            currentLogin == post.user.login ?
+              '<a href="" class="delete-link">Удалить</a>' : ''
+          }
         </div>
         <div class="post-image-container">
           <img class="post-image" src="${post.imageUrl}">
@@ -89,6 +93,20 @@ export function renderPostsPageComponent({ appEl }) {
           renderApp();
         }).catch(error => alert(error.message));
       }
+    });
+  });
+
+  [...document.querySelectorAll('.delete-link')].forEach((delEl, index) => {
+    delEl?.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      deletePost({
+        token: getToken(),
+        id: posts[index].id
+      }).then(() => {
+        return goToPage(page);
+      });
     });
   });
 }

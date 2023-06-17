@@ -196,3 +196,15 @@
   width: 100%;
   text-align: center;
 }
+
+.delete-link {
+  margin-left: 10px;
+  text-decoration: none;
+  color: #000000;
+  transition: all 0.5s;
+}
+
+.delete-link:hover {
+  text-decoration: underline;
+  opacity: 0.6;
+}

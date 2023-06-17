@@ -79,6 +79,15 @@ export function dislikePost({ token, id }) {
   }).then(data => data.post);
 }
 
+export function deletePost({ token, id }) {
+  return fetch(`${postsHost}/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: token
+    }
+  }).then(response => response.json());
+}
+
 export function registerUser({ login, password, name, imageUrl }) {
   return fetch(baseHost + "/api/user", {
     method: "POST",

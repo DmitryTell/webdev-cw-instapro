@@ -11,14 +11,18 @@ import {
 import { renderPostsPageComponent } from "./components/posts-page-component.js";
 import { renderLoadingPageComponent } from "./components/loading-page-component.js";
 import {
+  getLoginFromLocalStorage,
   getUserFromLocalStorage,
+  removeLoginFromLocalStorage,
   removeUserFromLocalStorage,
+  saveLoginToLocalStorage,
   saveUserToLocalStorage,
 } from "./helpers.js";
 
 export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
+export let currentLogin = getLoginFromLocalStorage();
 
 export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
@@ -28,9 +32,12 @@ export const getToken = () => {
 
 export const logout = () => {
   user = null;
+  currentLogin = null;
 
   removeUserFromLocalStorage();
-  goToPage(POSTS_PAGE);
+  removeLoginFromLocalStorage();
+
+  return goToPage(POSTS_PAGE);
 };
 
 export const goToPage = (newPage, data) => {
@@ -108,8 +115,14 @@ export const renderApp = () => {
       appEl,
       setUser: (newUser) => {
         user = newUser;
+
         saveUserToLocalStorage(user);
         goToPage(POSTS_PAGE);
+      },
+      setLogin: (newLogin) => {
+        currentLogin = newLogin;
+
+        saveLoginToLocalStorage(currentLogin);
       },
       user,
       goToPage,
