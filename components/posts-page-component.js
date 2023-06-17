@@ -1,6 +1,7 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage } from "../index.js";
+import { posts, goToPage, getToken, renderApp } from "../index.js";
+import { dislikePost, likePost } from "../api.js";
 
 export function renderPostsPageComponent({ appEl }) {
   /**
@@ -27,7 +28,7 @@ export function renderPostsPageComponent({ appEl }) {
           </button>
           <p class="post-likes-text">
             Нравится: <strong>${
-              post.likes.length > 0 ? post.likes[post.likes.length - 1] : '0'
+              post.likes.length > 0 ? post.likes[post.likes.length - 1].name : '0'
             }</strong> ${
               post.likes.length > 1 ? `и <strong>еще ${
                 post.likes.length - 1
@@ -66,4 +67,28 @@ export function renderPostsPageComponent({ appEl }) {
       });
     });
   }
+
+  [...document.querySelectorAll('.like-button')].forEach((likeEl, index) => {
+    likeEl.addEventListener('click', () => {
+      if (posts[index].isLiked) {
+        dislikePost({
+          token: getToken(),
+          id: posts[index].id
+        }).then(newPost => {
+          posts.splice(index, 1, newPost);
+
+          renderApp();
+        }).catch(error => alert(error.message));
+      } else {
+        likePost({
+          token: getToken(),
+          id: posts[index].id
+        }).then(newPost => {
+          posts.splice(index, 1, newPost);
+
+          renderApp();
+        }).catch(error => alert(error.message));
+      }
+    });
+  });
 }
