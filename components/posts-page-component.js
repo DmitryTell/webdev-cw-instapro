@@ -2,13 +2,12 @@ import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, page, currentLogin, goToPage, getToken, renderApp } from "../index.js";
 import { deletePost, dislikePost, likePost } from "../api.js";
+import { formatDistanceToNow } from "date-fns";
+import { ru } from "date-fns/locale";
 
 export function renderPostsPageComponent({ appEl }) {
   let isScrolled = false;
-  /**
-   * TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
-   * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
-   */
+
   const render = () => {
     const listHtml = posts.map(post => {
       return `
@@ -47,7 +46,9 @@ export function renderPostsPageComponent({ appEl }) {
             ${post.description}
           </p>
           <p class="post-date">
-            ${post.createdAt}
+            ${
+              formatDistanceToNow(new Date(post.createdAt), {locale: ru})
+            }
           </p>
         </li>`;
     }).join('');
