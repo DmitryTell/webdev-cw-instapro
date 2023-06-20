@@ -2,7 +2,7 @@ import { loginUser, registerUser } from "../api.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
 
-export function renderAuthPageComponent({ appEl, setUser }) {
+export function renderAuthPageComponent({ appEl, setUser, setLogin }) {
   let isLoginMode = true;
   let imageUrl = "";
 
@@ -54,8 +54,6 @@ export function renderAuthPageComponent({ appEl, setUser }) {
 
     appEl.innerHTML = appHtml;
 
-    // Не вызываем перерендер, чтобы не сбрасывалась заполненная форма
-    // Точечно обновляем кусочек дом дерева
     const setError = (message) => {
       appEl.querySelector(".form-error").textContent = message;
     };
@@ -98,6 +96,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
         })
           .then((user) => {
             setUser(user.user);
+            setLogin(user.user.login);
           })
           .catch((error) => {
             console.warn(error);
@@ -134,6 +133,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
         })
           .then((user) => {
             setUser(user.user);
+            setLogin(user.user.login);
           })
           .catch((error) => {
             console.warn(error);
